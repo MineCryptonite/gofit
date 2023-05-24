@@ -1,0 +1,33 @@
+name: gofit
+description: A new Flutter project.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.0.1 <4.0.0"
+
+dependencies:
+  cloud_firestore: ^4.7.1
+  firebase_auth: ^4.6.1
+  firebase_core: ^2.13.0
+  firebase_messaging: ^14.6.1
+  firebase_storage: ^11.2.1
+  flutter:
+    sdk: flutter
+  flutter_stripe: ^9.2.0
+  fluttertoast: ^8.2.1
+  get: ^4.6.5
+  image_picker: ^0.8.7+5
+  persistent_bottom_nav_bar: ^5.0.2
+  provider: ^6.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/

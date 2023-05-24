@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>925942846141-jl1p3hsu1e6at1v3r8ub5e5f7n3ttrg5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.925942846141-jl1p3hsu1e6at1v3r8ub5e5f7n3ttrg5</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>925942846141-27nrrqaoifiba1vmmbdoskmdhifam88s.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCTzrz2l2AF_i8yv_BUKFIvE-r55tXMVTU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>925942846141</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.gofit.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>customer-management-6f127</string>
+	<key>STORAGE_BUCKET</key>
+	<string>customer-management-6f127.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:925942846141:ios:baf79eaa69af78dea21dd4</string>
+</dict>
+</plist>
