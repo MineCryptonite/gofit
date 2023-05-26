@@ -27,7 +27,7 @@ class FirebaseAuthHelper {
   }
 
   Future<bool> signUp(String display_name, String email, String password,
-      BuildContext context) async {
+      Timestamp created_time, String phone_number, BuildContext context) async {
     try {
       showLoaderDialog(context);
       UserCredential userCredential = await _auth
@@ -36,8 +36,12 @@ class FirebaseAuthHelper {
           uid: userCredential.user!.uid,
           display_name: display_name,
           email: email,
-          photo_url: null,
-          phone_number: null);
+          photo_url:
+              "https://lh3.googleusercontent.com/a/AAcHTtfIFUQQpN8YMXxt9ZHThHHk4_QrFjoiCvpQj9zJ-Q=s96-c",
+          phone_number: phone_number,
+          created_time: created_time,
+          referralCode: 'referralCode',
+          referralCount: 0);
 
       _firestore.collection("users").doc(userModel.uid).set(userModel.toJson());
       Navigator.of(context, rootNavigator: true).pop();

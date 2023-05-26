@@ -38,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          "Profile",
+          "정보 수정",
           style: TextStyle(
             color: Colors.black,
           ),
@@ -77,7 +77,7 @@ class _EditProfileState extends State<EditProfile> {
             height: 24.0,
           ),
           PrimaryButton(
-            title: "Update",
+            title: "확인",
             onPressed: () async {
               UserModel userModel = appProvider.getUserInformation
                   .copyWith(name: textEditingController.text);

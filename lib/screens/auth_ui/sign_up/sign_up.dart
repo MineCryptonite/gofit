@@ -1,10 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gofit/constants/constants.dart';
 import 'package:gofit/constants/routes.dart';
 import 'package:gofit/firebase_helper/firebase_auth_helper/firebase_auth_helper.dart';
+import 'package:gofit/main.dart';
 import 'package:gofit/screens/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:gofit/widgets/primary_button/primary_button.dart';
 import 'package:gofit/widgets/top_titles/top_titles.dart';
@@ -18,6 +20,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool isShowPassword = true;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   TextEditingController password = TextEditingController();
   TextEditingController email = TextEditingController();
 
@@ -104,11 +108,18 @@ class _SignUpState extends State<SignUp> {
                   bool isVaildated = signUpValidation(
                       email.text, password.text, name.text, phone.text);
                   if (isVaildated) {
-                    bool isLogined = await FirebaseAuthHelper.instance
-                        .signUp(name.text, email.text, password.text, context);
+                    var timestamp = Timestamp.now();
+
+                    bool isLogined = await FirebaseAuthHelper.instance.signUp(
+                        name.text.trim(),
+                        email.text.trim(),
+                        password.text.trim(),
+                        timestamp,
+                        phone.text.trim(),
+                        context);
                     if (isLogined) {
                       Routes.instance.pushAndRemoveUntil(
-                          widget: const CustomBottomBar(), context: context);
+                          widget: const MainApp(), context: context);
                     }
                   }
                 },

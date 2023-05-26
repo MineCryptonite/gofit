@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gofit/constants/constants.dart';
 import 'package:gofit/models/category_model/category_model.dart';
+import 'package:gofit/models/class_details_model.dart';
 import 'package:gofit/models/home_model.dart';
 import 'package:gofit/models/order_model/order_model.dart';
 import 'package:gofit/models/product_model/product_model.dart';
@@ -34,56 +35,41 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  Future<List<List<ProductModel>>> getHome() async {
+  Future<List<List<ProductModel>>> getHomeClasses() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot1 =
-          await _firebaseFirestore.collection("home").get();
-
-      List<HomeModel> homeList =
-          querySnapshot1.docs.map((e) => HomeModel.fromJson(e.data())).toList();
-
-      List<List<String>> classesLists = [];
-      List<String> classes = [];
-      for (int i = 0; i < homeList.length; i++) {
-        for (int j = 0; j < homeList[i].classesRef.length; j++) {
-          String value = homeList[i].classesRef[j].toString();
-          List<String> temp = value.split('/');
-          //print(temp[1]);
-          classes.add(temp[1]);
-        }
-        classesLists.add(classes);
-        classes = [];
-      }
-
-      //print(classesLists);
-
-      List<ProductModel> homeClassList = [];
+      CollectionReference homeCollection =
+          _firebaseFirestore.collection('home');
       List<List<ProductModel>> homeClassesList = [];
-      for (int i = 0; i < classesLists.length; i++) {
-        for (int j = 0; j < classesLists[i].length; j++) {
-          String classesList = classesLists[i][j];
-          print(classesList);
-          QuerySnapshot<Map<String, dynamic>> querySnapshot =
-              await FirebaseFirestore.instance
-                  .collection("classes")
-                  .where("id", isEqualTo: classesList)
-                  .get();
 
-          if (querySnapshot.docs.isNotEmpty) {
-            print("ITS WORKING");
-            QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                querySnapshot.docs[0];
-            Map<String, dynamic> data = documentSnapshot.data();
-            ProductModel productModel = ProductModel.fromJson(data);
-            homeClassList.add(productModel);
-          }
-        }
+      QuerySnapshot homeSnapshot = await homeCollection.get();
 
-        //print(homeClassList);
-        homeClassesList.add(homeClassList);
-        homeClassList = []; // Clear the list for the next iteration
+      List<Future<List<ProductModel>>> fetchProductsFutures =
+          homeSnapshot.docs.map((homeDoc) {
+        Map<String, dynamic> data = homeDoc.data() as Map<String, dynamic>;
+        List<DocumentReference> references =
+            List<DocumentReference>.from(data['classesRef']);
+
+        List<Future<ProductModel>> fetchProductFutures = references.map((ref) {
+          return ref.get().then((productDoc) {
+            if (productDoc.exists) {
+              Map<String, dynamic> productData =
+                  productDoc.data() as Map<String, dynamic>;
+              return ProductModel.fromJson(productData);
+            } else {
+              throw Exception('Referenced product document does not exist.');
+            }
+          });
+        }).toList();
+
+        return Future.wait(fetchProductFutures);
+      }).toList();
+
+      List<List<ProductModel>> productsList =
+          await Future.wait(fetchProductsFutures);
+
+      for (List<ProductModel> products in productsList) {
+        homeClassesList.add(products);
       }
-      print(homeClassesList);
 
       return homeClassesList;
     } catch (e) {
@@ -94,48 +80,11 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  /*Future<List<List<ProductModel>>> getHomeClasses(List<HomeModel> homeList) async {
-    try {
-      List<List<String>> classesLists = [];
-      List<String> classes = [];
-      for (int i = 0; i < homeList.length; i++) {
-        for (int j = 0; j < homeList[i].classesRef.length; j++) {
-          String value = homeList[i].classesRef[j].toString();
-          List<String> temp = value.split('/');
-          //print(temp[1]);
-          classes.add(temp[1]);
-        }
-        classesLists.add(classes);
-        classes = [];
-      }
+  Future<List<HomeModel>> getHomeList() async {
+    List<HomeModel> homeList = [];
 
-      List<ProductModel> homeClassList = [];
-      List<List<ProductModel>> homeClassesList = [];
-      for (int i = 0; i < classesLists.length; i++) {
-        for (int j = 0; j < classesLists[0][j].length; j++) {
-          String classesList = classesLists[0][j];
-          DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-              .collection('home')
-              .doc(classesList)
-              .get();
-          if (documentSnapshot.exists) {
-            Map<String, dynamic> data =
-                documentSnapshot.data() as Map<String, dynamic>;
-            ProductModel productModel = ProductModel.fromJson(data);
-            homeClassList.add(productModel);
-          }
-        }
-        homeClassesList.add(homeClassList);
-      }
-
-      return homeClassesList;
-    } catch (e) {
-      showMessage(e.toString());
-      print(e.toString());
-
-      return [];
-    }
-  }*/
+    return homeList;
+  }
 
   Future<List<ProductModel>> getBestProducts() async {
     try {
@@ -156,18 +105,30 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  Future<List<ProductModel>> getCategoryViewProduct(String id) async {
+  Future<List<ProductModel?>> getCategoryViewProduct(String id) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _firebaseFirestore.collection("workoutCategories").get();
+      QuerySnapshot querySnapshot = await _firebaseFirestore
+          .collection('classes')
+          .where("exerciseType", isEqualTo: id)
+          .get();
 
-      List<ProductModel> productModelList = querySnapshot.docs
-          .map((e) => ProductModel.fromJson(e.data()))
-          .toList();
+      List<ProductModel?> productModels =
+          querySnapshot.docs.map((documentSnapshot) {
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data =
+              documentSnapshot.data() as Map<String, dynamic>;
+          return ProductModel.fromJson(data);
+        }
+        return null;
+      }).toList();
 
-      return productModelList;
+      // Remove any null values from the list
+      productModels.removeWhere((productModel) => productModel == null);
+
+      return productModels;
     } catch (e) {
       showMessage(e.toString());
+      print(e.toString());
       return [];
     }
   }
@@ -178,70 +139,92 @@ class FirebaseFirestoreHelper {
             .collection("users")
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
+    print(querySnapshot.data());
 
     return UserModel.fromJson(querySnapshot.data()!);
   }
 
-  /*Future<bool> uploadOrderedProductFirebase(
-      List<ProductModel> list, BuildContext context, String payment) async {
+  /*Future<ClassDetailsModel?> getClassDetailsFromClasses(
+      ProductModel classModel) async {
     try {
-      showLoaderDialog(context);
-      double totalPrice = 0.0;
-      for (var element in list) {
-        totalPrice += element.creditsRequired;
+      CollectionReference classDetailsCollection =
+          _firebaseFirestore.collection('classDetails');
+
+      // Query the 'classDetails' collection to retrieve all documents
+      QuerySnapshot classDetailsSnapshot = await classDetailsCollection.get();
+
+      if (classDetailsSnapshot.docs.isNotEmpty) {
+        // Iterate through each classDetails document
+        for (DocumentSnapshot classDetailsDoc in classDetailsSnapshot.docs) {
+          // Get the reference field that indicates which class the document belongs to
+          DocumentReference classReference = classDetailsDoc['classRef'];
+
+          // Get the reference path of the class document
+          String classPath = classReference.path;
+
+          // Check if the class document's path matches the reference path of the given ClassModel
+          if (classPath == classModel.reference.path) {
+            // Fetch the corresponding class document using the reference
+            DocumentSnapshot classDoc = await classReference.get();
+
+            if (classDoc.exists) {
+              Map<String, dynamic> classData =
+                  classDoc.data() as Map<String, dynamic>;
+              // Assuming you have a ClassDetailsModel class to represent the class details
+              ClassDetailsModel classDetailsModel =
+                  ClassDetailsModel.fromJson(classData);
+              return classDetailsModel;
+            } else {
+              throw Exception(
+                  'Referenced class document does not exist for classDetails document: ${classDetailsDoc.id}');
+            }
+          }
+        }
+        throw Exception(
+            'No matching classDetails found for the given ClassModel.');
+      } else {
+        throw Exception('No classDetails documents found.');
       }
-      DocumentReference documentReference = _firebaseFirestore
-          .collection("usersOrders")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection("orders")
-          .doc();
-      DocumentReference admin = _firebaseFirestore.collection("orders").doc();
-
-      admin.set({
-        "products": list.map((e) => e.toJson()),
-        "status": "Pending",
-        "totalPrice": totalPrice,
-        "payment": payment,
-        "orderId": admin.id,
-      });
-      documentReference.set({
-        "products": list.map((e) => e.toJson()),
-        "status": "Pending",
-        "totalPrice": totalPrice,
-        "payment": payment,
-        "orderId": documentReference.id,
-      });
-      Navigator.of(context, rootNavigator: true).pop();
-      showMessage("Ordered Successfully");
-      return true;
     } catch (e) {
       showMessage(e.toString());
-      Navigator.of(context, rootNavigator: true).pop();
-      return false;
+      print(e.toString());
+      return null;
     }
   }*/
-
-  ////// Get Order User//////
-
-  /*Future<List<OrderModel>> getUserOrder() async {
+  Future<void> updateClassDocumentsWithClassDetails() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _firebaseFirestore
-              .collection("usersOrders")
-              .doc(FirebaseAuth.instance.currentUser!.uid)
-              .collection("orders")
-              .get();
+      // Retrieve the documents from the 'classes' collection
+      QuerySnapshot classesSnapshot =
+          await _firebaseFirestore.collection('classes').get();
 
-      List<OrderModel> orderList = querySnapshot.docs
-          .map((element) => OrderModel.fromJson(element.data()))
-          .toList();
+      // Iterate over each class document
+      for (DocumentSnapshot classDoc in classesSnapshot.docs) {
+        // Get the class ID
+        String classId = classDoc.id;
 
-      return orderList;
+        // Get the 'classDetails' collection reference within the class document
+        CollectionReference classDetailsCollection =
+            classDoc.reference.collection('classDetails');
+
+        // Retrieve the documents from the 'classDetails' collection
+        QuerySnapshot classDetailsSnapshot = await classDetailsCollection.get();
+
+        // Iterate over each classDetails document
+        for (DocumentSnapshot classDetailsDoc in classDetailsSnapshot.docs) {
+          // Get the data from the classDetailsDoc document
+          Map<String, dynamic> classDetailsData =
+              classDetailsDoc.data() as Map<String, dynamic>;
+
+          // Update the class document with the classDetailsData
+          await classDoc.reference.update(classDetailsData);
+
+          print('Class document updated with classDetails: $classId');
+        }
+      }
     } catch (e) {
-      showMessage(e.toString());
-      return [];
+      print('Error updating class documents with classDetails: $e');
     }
-  }*/
+  }
 
   void updateTokenFromFirebase() async {
     String? token = await FirebaseMessaging.instance.getToken();

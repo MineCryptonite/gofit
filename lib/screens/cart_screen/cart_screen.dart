@@ -33,14 +33,14 @@ class _CartScreenState extends State<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Total",
+                    "결제 금액",
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    "\$${appProvider.totalPrice().toString()}",
+                    "${appProvider.totalPrice().toString()}원",
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -52,7 +52,7 @@ class _CartScreenState extends State<CartScreen> {
                 height: 24.0,
               ),
               PrimaryButton(
-                title: "Checkout",
+                title: "결제",
                 onPressed: () {
                   appProvider.clearBuyProduct();
                   appProvider.addBuyProductCartList();
@@ -73,7 +73,7 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         // backgroundColor: Colo,
         title: const Text(
-          "Cart Screen",
+          "장바구니",
           style: TextStyle(
             color: Colors.black,
           ),

@@ -23,7 +23,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          "Change Password",
+          "비밀번호 초기화",
           style: TextStyle(
             color: Colors.black,
           ),
@@ -36,7 +36,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             controller: newpassword,
             obscureText: isShowPassword,
             decoration: InputDecoration(
-              hintText: "New Password",
+              hintText: "새 비밀번호",
               prefixIcon: const Icon(
                 Icons.password_sharp,
               ),
@@ -60,7 +60,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             controller: confirmpassword,
             obscureText: isShowPassword,
             decoration: const InputDecoration(
-              hintText: "Confrim Password",
+              hintText: "새 비밀번호 확인",
               prefixIcon: Icon(
                 Icons.password_sharp,
               ),
@@ -70,7 +70,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             height: 36.0,
           ),
           PrimaryButton(
-            title: "Update",
+            title: "확인",
             onPressed: () async {
               if (newpassword.text.isEmpty) {
                 showMessage("New Password is empty");

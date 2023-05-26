@@ -21,10 +21,10 @@ class BigText extends StatelessWidget {
       maxLines: 1,
       overflow: overFlow,
       style: TextStyle(
-        fontFamily: 'Roboto',
+        fontFamily: 'Pretendard',
         color: color,
         fontSize: size == 0 ? Dimensions.font20 : size,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w700,
       ),
     );
   }

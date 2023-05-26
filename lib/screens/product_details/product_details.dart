@@ -42,10 +42,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                widget.singleProduct.image,
-                height: 400,
-                width: 400,
+              Image.network(widget.singleProduct.image,
+                  height: 400, width: 400, fit: BoxFit.cover),
+              SizedBox(
+                height: 15,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +53,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Text(
                     widget.singleProduct.name,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -64,7 +64,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             !widget.singleProduct.isFavourite;
                       });
                       if (widget.singleProduct.isFavourite) {
-                        appProvider.addFavouriteProduct(widget.singleProduct);
+                        //appProvider.addFavouriteProduct(widget.singleProduct);
                       } else {
                         appProvider
                             .removeFavouriteProduct(widget.singleProduct);
@@ -81,7 +81,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               const SizedBox(
                 height: 12.00,
               ),
-              Row(
+              /*Row(
                 children: [
                   CupertinoButton(
                     onPressed: () {
@@ -121,7 +121,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                   ),
                 ],
-              ),
+              ),*/
               // const Spacer(),
               const SizedBox(
                 height: 24.0,

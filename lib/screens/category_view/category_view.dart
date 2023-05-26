@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gofit/dimensions.dart';
+import 'package:gofit/widgets/big_text.dart';
+import 'package:gofit/widgets/colors.dart';
+import 'package:gofit/widgets/icon_and_text_widget.dart';
+import 'package:gofit/widgets/small_text.dart';
 
 import '../../constants/routes.dart';
 import '../../firebase_helper/firebase_firestore_helper/firebase_firestore.dart';
@@ -15,7 +20,7 @@ class CategoryView extends StatefulWidget {
 }
 
 class _CategoryViewState extends State<CategoryView> {
-  List<ProductModel> productModelList = [];
+  List<ProductModel?> productModelList = [];
 
   bool isLoading = false;
   void getCategoryList() async {
@@ -24,7 +29,7 @@ class _CategoryViewState extends State<CategoryView> {
     });
     productModelList = await FirebaseFirestoreHelper.instance
         .getCategoryViewProduct(widget.categoryModel.category);
-    productModelList.shuffle();
+    //productModelList.shuffle();
     setState(() {
       isLoading = false;
     });
@@ -72,74 +77,114 @@ class _CategoryViewState extends State<CategoryView> {
                       ? const Center(
                           child: Text("Best Product is empty"),
                         )
-                      : Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: GridView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              primary: false,
-                              itemCount: productModelList.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      mainAxisSpacing: 20,
-                                      crossAxisSpacing: 20,
-                                      childAspectRatio: 0.7,
-                                      crossAxisCount: 2),
-                              itemBuilder: (ctx, index) {
-                                ProductModel singleProduct =
-                                    productModelList[index];
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(8.0),
+                      : Container(
+                          margin: EdgeInsets.only(bottom: 100),
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(top: Dimensions.height20),
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: productModelList.length,
+                            itemBuilder: ((context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Routes.instance.push(
+                                      widget: ProductDetails(
+                                        singleProduct: productModelList[index]!,
+                                      ),
+                                      context: context);
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: Dimensions.width20,
+                                    right: Dimensions.width20,
+                                    bottom: Dimensions.height10,
                                   ),
-                                  child: Column(
+                                  child: Row(
                                     children: [
-                                      const SizedBox(
-                                        height: 12.0,
-                                      ),
-                                      Image.network(
-                                        singleProduct.image,
-                                        height: 100,
-                                        width: 100,
-                                      ),
-                                      const SizedBox(
-                                        height: 12.0,
-                                      ),
-                                      Text(
-                                        singleProduct.name,
-                                        style: const TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold,
+                                      Container(
+                                        width: Dimensions.listViewImgSize,
+                                        height: Dimensions.listViewImgSize,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              Dimensions.radius20),
+                                          color: Colors.white38,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                                productModelList[index]!.image),
+                                          ),
                                         ),
                                       ),
-                                      Text(
-                                          "Price: \$${singleProduct.creditsRequired}"),
-                                      const SizedBox(
-                                        height: 30.0,
-                                      ),
-                                      SizedBox(
-                                        height: 45,
-                                        width: 140,
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            Routes.instance.push(
-                                                widget: ProductDetails(
-                                                    singleProduct:
-                                                        singleProduct),
-                                                context: context);
-                                          },
-                                          child: const Text(
-                                            "Buy",
+                                      Expanded(
+                                        child: Container(
+                                          height: Dimensions.listViewImgSize,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(
+                                                  Dimensions.radius20),
+                                              bottomRight: Radius.circular(
+                                                  Dimensions.radius20),
+                                            ),
+                                            color: Colors.white,
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: Dimensions.width10,
+                                                right: Dimensions.width10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                BigText(
+                                                    text:
+                                                        productModelList[index]!
+                                                            .name),
+                                                SizedBox(
+                                                    height:
+                                                        Dimensions.height10),
+                                                SmallText(text: "TESTING"),
+                                                SizedBox(
+                                                    height:
+                                                        Dimensions.height10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    IconAndTextWidget(
+                                                      icon: Icons.circle_sharp,
+                                                      text: "Normal",
+                                                      iconColor:
+                                                          AppColors.iconColor1,
+                                                    ),
+                                                    IconAndTextWidget(
+                                                      icon: Icons.location_on,
+                                                      text: "1.7km",
+                                                      iconColor:
+                                                          AppColors.mainColor,
+                                                    ),
+                                                    IconAndTextWidget(
+                                                      icon: Icons
+                                                          .access_time_rounded,
+                                                      text: "32min",
+                                                      iconColor:
+                                                          AppColors.iconColor2,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                );
-                              }),
+                                ),
+                              );
+                            }),
+                          ),
                         ),
                   const SizedBox(
                     height: 12.0,

@@ -22,7 +22,29 @@ class ProductModel {
     required this.originalPrice,
     required this.paymentUrl,
     required this.isFavourite,
+    required this.address,
+    required this.businessHours,
+    required this.description,
+    required this.duration,
+    required this.hasShower,
+    required this.images,
+    required this.info,
+    required this.instagram,
+    required this.monthlyLimit,
+    required this.requirements,
+    required this.website,
   });
+  String address;
+  List<dynamic> businessHours;
+  String description;
+  String duration;
+  bool hasShower;
+  List<dynamic> images;
+  List<dynamic> info;
+  String instagram;
+  int monthlyLimit;
+  String requirements;
+  String website;
   GeoPoint coords;
   int creditsRequired;
   String distance;
@@ -40,7 +62,7 @@ class ProductModel {
   //int? qty;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-        image: json["image"],
+        image: json["image"] ?? "",
         coords: json["coords"] ?? GeoPoint(0, 0),
         creditsRequired: json["creditsRequired"] ?? 0,
         distance: json["distance"] ?? "",
@@ -53,6 +75,17 @@ class ProductModel {
         hideClass: json["hideClass"] ?? false,
         priority: json["priority"] ?? 0,
         ratings: json["ratings"] ?? 0,
+        address: json["address"] ?? "",
+        businessHours: json["businessHours"] ?? [],
+        description: json["description"] ?? "",
+        duration: json["duration"] ?? "",
+        hasShower: json["hasShower"] ?? false,
+        images: json["images"] ?? [],
+        info: json["info"] ?? [],
+        instagram: json["instagram"] ?? "",
+        monthlyLimit: json["monthlyLimit"] ?? 0,
+        requirements: json["requirements"] ?? "",
+        website: json["website"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -65,6 +98,20 @@ class ProductModel {
         "name": name,
         "originalPrice": originalPrice,
         "paymentUrl": paymentUrl,
+        "hideClass": hideClass,
+        "priority": priority,
+        "ratings": ratings,
+        "address": address,
+        "businessHours": businessHours,
+        "description": description,
+        "duration": duration,
+        "hasShower": hasShower,
+        "images": images,
+        "info": info,
+        "instagram": instagram,
+        "monthlyLimit": monthlyLimit,
+        "requirements": requirements,
+        "website": website,
       };
   // ProductModel copyWith({
   //   int? qty,

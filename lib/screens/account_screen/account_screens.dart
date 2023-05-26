@@ -29,7 +29,7 @@ class _AccountScreenState extends State<AccountScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          "Account",
+          "계정",
           style: TextStyle(
             color: Colors.black,
           ),
@@ -66,7 +66,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 SizedBox(
                   width: 130,
                   child: PrimaryButton(
-                    title: "Edit Profile",
+                    title: "정보 수정",
                     onPressed: () {
                       Routes.instance
                           .push(widget: const EditProfile(), context: context);
@@ -86,7 +86,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         .push(widget: const OrderScreen(), context: context);
                   },
                   leading: const Icon(Icons.shopping_bag_outlined),
-                  title: const Text("Your Orders"),
+                  title: const Text("나의 예약들"),
                 ),
                 ListTile(
                   onTap: () {
@@ -94,23 +94,23 @@ class _AccountScreenState extends State<AccountScreen> {
                         widget: const FavouriteScreen(), context: context);
                   },
                   leading: const Icon(Icons.favorite_outline),
-                  title: const Text("Favourite"),
+                  title: const Text("찜"),
                 ),
-                ListTile(
+                /*ListTile(
                   onTap: () {
                     Routes.instance
                         .push(widget: const AboutUs(), context: context);
                   },
                   leading: const Icon(Icons.info_outline),
                   title: const Text("About us"),
-                ),
+                ),*/
                 ListTile(
                   onTap: () {
                     Routes.instance
                         .push(widget: const ChangePassword(), context: context);
                   },
                   leading: const Icon(Icons.change_circle_outlined),
-                  title: const Text("Change Password"),
+                  title: const Text("비밀번호 초기화"),
                 ),
                 ListTile(
                   onTap: () {
@@ -119,7 +119,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     setState(() {});
                   },
                   leading: const Icon(Icons.exit_to_app),
-                  title: const Text("Log out"),
+                  title: const Text("로그아웃"),
                 ),
                 const SizedBox(
                   height: 12.0,

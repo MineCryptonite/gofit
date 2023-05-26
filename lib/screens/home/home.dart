@@ -1,3 +1,4 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gofit/constants/routes.dart';
@@ -9,7 +10,9 @@ import 'package:gofit/provider/app_provider.dart';
 import 'package:gofit/screens/category_view/category_view.dart';
 import 'package:gofit/screens/product_details/product_details.dart';
 import 'package:gofit/widgets/big_text.dart';
+import 'package:gofit/widgets/colors.dart';
 import 'package:gofit/widgets/icon_and_text_widget.dart';
+import 'package:gofit/widgets/small_text.dart';
 import 'package:gofit/widgets/top_titles/top_titles.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +29,7 @@ class _HomeState extends State<Home> {
   List<CategoryModel> categoriesList = [];
   List<ProductModel> productModelList = [];
   List<List<ProductModel>> homeClassesList = [];
+  List<HomeModel> homeList = [];
   PageController pageController = PageController(viewportFraction: 0.85);
   var _currPageValue = 0.0;
   double _scaleFactor = 0.8;
@@ -34,14 +38,15 @@ class _HomeState extends State<Home> {
   bool isLoading = false;
   @override
   void initState() {
-    // AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
-    // appProvider.getUserInfoFirebase();
+    AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
+    appProvider.getUserInfoFirebase();
     pageController.addListener(() {
       setState(() {
         _currPageValue = pageController.page!;
       });
     });
     getCategoryList();
+
     // getProductList();
     super.initState();
   }
@@ -52,8 +57,11 @@ class _HomeState extends State<Home> {
     });
     FirebaseFirestoreHelper.instance.updateTokenFromFirebase();
     categoriesList = await FirebaseFirestoreHelper.instance.getCategories();
+    homeClassesList = await FirebaseFirestoreHelper.instance.getHomeClasses();
+
     productModelList = await FirebaseFirestoreHelper.instance.getBestProducts();
-    homeClassesList = await FirebaseFirestoreHelper.instance.getHome();
+    homeList = await FirebaseFirestoreHelper.instance.getHomeList();
+    // print(homeClassesList);
     //productModelList.shuffle();
     if (mounted) {
       setState(() {
@@ -61,21 +69,6 @@ class _HomeState extends State<Home> {
       });
     }
   }
-
-  // void getProductList() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   FirebaseFirestoreHelper.instance.updateTokenFromFirebase();
-  //   productModelList = await FirebaseFirestoreHelper.instance.getBestProducts();
-
-  //   //productModelList.shuffle();
-  //   if (mounted) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  ///}
 
   TextEditingController search = TextEditingController();
   List<ProductModel> searchList = [];
@@ -108,7 +101,26 @@ class _HomeState extends State<Home> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const TopTitles(subtitle: "", title: "GoFit"),
+                        const SizedBox(
+                          height: 64.0,
+                        ),
+                        BigText(
+                          text: "검색",
+                          size: 24,
+                        ),
+                        // const TopTitles(subtitle: "", title: "GoFit"),
+                        // Text(
+                        //   'GoFit',
+                        //   style: TextStyle(
+                        //     fontFamily: 'Pretendard',
+                        //     fontSize: 50,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
+                        const SizedBox(
+                          height: 14.0,
+                        ),
+
                         TextFormField(
                           controller: search,
                           onChanged: (String value) {
@@ -178,7 +190,42 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                   const SizedBox(
+                    height: 36.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 12.0, left: 12.0),
+                    child: BigText(
+                      text: "인기",
+                    ),
+                  ),
+                  const SizedBox(
                     height: 12.0,
+                  ),
+                  homeClassesList.isNotEmpty
+                      ? ClassWidget(
+                          pageController: pageController,
+                          classes: homeClassesList[0],
+                          currPageValue: _currPageValue,
+                          scaleFactor: _scaleFactor,
+                          height: _height,
+                        )
+                      : Container(
+                          child: Text("LOADING"),
+                        ),
+                  Center(
+                    child: DotsIndicator(
+                      dotsCount: homeClassesList.isEmpty
+                          ? 1
+                          : homeClassesList[0].length,
+                      position: _currPageValue,
+                      decorator: DotsDecorator(
+                        activeColor: AppColors.mainColor,
+                        size: const Size.square(9.0),
+                        activeSize: const Size(18.0, 9.0),
+                        activeShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
+                    ),
                   ),
                   !isSearched()
                       ? Padding(
@@ -196,122 +243,254 @@ class _HomeState extends State<Home> {
                           child: Text("No Product Found"),
                         )
                       : searchList.isNotEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: GridView.builder(
-                                  padding: const EdgeInsets.only(bottom: 50),
-                                  shrinkWrap: true,
-                                  primary: false,
-                                  itemCount: searchList.length,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          mainAxisSpacing: 20,
-                                          crossAxisSpacing: 20,
-                                          childAspectRatio: 0.7,
-                                          crossAxisCount: 2),
-                                  itemBuilder: (ctx, index) {
-                                    ProductModel singleProduct =
-                                        searchList[index];
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .primaryColor
-                                            .withOpacity(0.3),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                          ? Container(
+                              margin: EdgeInsets.only(bottom: 100),
+                              child: ListView.builder(
+                                padding:
+                                    EdgeInsets.only(top: Dimensions.height20),
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: searchList.length,
+                                itemBuilder: ((context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Routes.instance.push(
+                                          widget: ProductDetails(
+                                            singleProduct: searchList[index]!,
+                                          ),
+                                          context: context);
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                        left: Dimensions.width20,
+                                        right: Dimensions.width20,
+                                        bottom: Dimensions.height10,
                                       ),
-                                      child: Column(
+                                      child: Row(
                                         children: [
-                                          const SizedBox(
-                                            height: 12.0,
-                                          ),
-                                          Image.network(
-                                            singleProduct.image,
-                                            height: 100,
-                                            width: 100,
-                                          ),
-                                          const SizedBox(
-                                            height: 12.0,
-                                          ),
-                                          Text(
-                                            singleProduct.name,
-                                            style: const TextStyle(
-                                              fontSize: 18.0,
-                                              fontWeight: FontWeight.bold,
+                                          Container(
+                                            width: Dimensions.listViewImgSize,
+                                            height: Dimensions.listViewImgSize,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      Dimensions.radius20),
+                                              color: Colors.white38,
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                    searchList[index].image),
+                                              ),
                                             ),
                                           ),
-                                          Text(
-                                              "Price: \$${singleProduct.creditsRequired}"),
-                                          const SizedBox(
-                                            height: 30.0,
-                                          ),
-                                          SizedBox(
-                                            height: 45,
-                                            width: 140,
-                                            child: OutlinedButton(
-                                              onPressed: () {
-                                                Routes.instance.push(
-                                                    widget: ProductDetails(
-                                                        singleProduct:
-                                                            singleProduct),
-                                                    context: context);
-                                              },
-                                              child: const Text(
-                                                "Buy",
+                                          Expanded(
+                                            child: Container(
+                                              height:
+                                                  Dimensions.listViewImgSize,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(
+                                                      Dimensions.radius20),
+                                                  bottomRight: Radius.circular(
+                                                      Dimensions.radius20),
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: Dimensions.width10,
+                                                    right: Dimensions.width10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    BigText(
+                                                        text: searchList[index]
+                                                            .name),
+                                                    SizedBox(
+                                                        height: Dimensions
+                                                            .height10),
+                                                    SmallText(
+                                                        text: searchList[index]
+                                                            .description),
+                                                    SizedBox(
+                                                        height: Dimensions
+                                                            .height10),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        IconAndTextWidget(
+                                                          icon:
+                                                              Icons.location_on,
+                                                          text:
+                                                              searchList[index]
+                                                                  .distance,
+                                                          iconColor: AppColors
+                                                              .mainColor,
+                                                        ),
+                                                        IconAndTextWidget(
+                                                          icon: Icons
+                                                              .access_time_rounded,
+                                                          text:
+                                                              searchList[index]
+                                                                  .duration,
+                                                          iconColor: AppColors
+                                                              .iconColor2,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    );
-                                  }),
+                                    ),
+                                  );
+                                }),
+                              ),
                             )
                           : productModelList.isEmpty
                               ? const Center(
                                   child: Text("Best Product is empty"),
                                 )
-                              : ClassWidget(
-                                  pageController: pageController,
-                                  classes: productModelList,
-                                  currPageValue: _currPageValue,
-                                  scaleFactor: _scaleFactor,
-                                  height: _height,
+                              : Container(
+                                  margin: EdgeInsets.only(bottom: 100),
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.only(
+                                        top: Dimensions.height20),
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: productModelList.length,
+                                    itemBuilder: ((context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Routes.instance.push(
+                                              widget: ProductDetails(
+                                                singleProduct:
+                                                    productModelList[index]!,
+                                              ),
+                                              context: context);
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                            left: Dimensions.width20,
+                                            right: Dimensions.width20,
+                                            bottom: Dimensions.height10,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width:
+                                                    Dimensions.listViewImgSize,
+                                                height:
+                                                    Dimensions.listViewImgSize,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          Dimensions.radius20),
+                                                  color: Colors.white38,
+                                                  image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                        productModelList[index]
+                                                            .image),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: Dimensions
+                                                      .listViewImgSize,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topRight: Radius.circular(
+                                                          Dimensions.radius20),
+                                                      bottomRight:
+                                                          Radius.circular(
+                                                              Dimensions
+                                                                  .radius20),
+                                                    ),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left:
+                                                            Dimensions.width10,
+                                                        right:
+                                                            Dimensions.width10),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        BigText(
+                                                            text:
+                                                                productModelList[
+                                                                        index]
+                                                                    .name),
+                                                        SizedBox(
+                                                            height: Dimensions
+                                                                .height10),
+                                                        SmallText(
+                                                            text: productModelList[
+                                                                    index]
+                                                                .description),
+                                                        SizedBox(
+                                                            height: Dimensions
+                                                                .height10),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            IconAndTextWidget(
+                                                              icon: Icons
+                                                                  .location_on,
+                                                              text:
+                                                                  productModelList[
+                                                                          index]
+                                                                      .distance,
+                                                              iconColor:
+                                                                  AppColors
+                                                                      .mainColor,
+                                                            ),
+                                                            IconAndTextWidget(
+                                                              icon: Icons
+                                                                  .access_time_rounded,
+                                                              text:
+                                                                  productModelList[
+                                                                          index]
+                                                                      .duration,
+                                                              iconColor: AppColors
+                                                                  .iconColor2,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ),
                                 ),
                   const SizedBox(
                     height: 12.0,
                   ),
-                  Container(
-                    height: 800,
-                    child: ListView.builder(
-                      itemCount: homeClassesList.length,
-                      itemBuilder: (context, index) {
-                        List<ProductModel> homeClassList =
-                            homeClassesList[index];
-                        return Column(
-                          children: [
-                            Text(
-                                'Row $index'), // Optional: Display a label for each row
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: homeClassList.length,
-                              itemBuilder: (context, index) {
-                                ProductModel homeClass = homeClassList[index];
-                                return ListTile(
-                                  title: Text(homeClass
-                                      .name), // Replace with the actual property you want to display
-                                  subtitle: Text(homeClass
-                                      .name), // Replace with the actual property you want to display
-                                  // Add more widgets to display other properties of the ProductModel
-                                );
-                              },
-                            ),
-                            Divider(), // Optional: Add a divider between rows
-                          ],
-                        );
-                      },
-                    ),
-                  )
                 ],
               ),
             ),
@@ -392,7 +571,13 @@ class ClassWidget extends StatelessWidget {
                 child: Stack(
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Routes.instance.push(
+                            widget: ProductDetails(
+                              singleProduct: classes[position]!,
+                            ),
+                            context: context);
+                      },
                       child: Container(
                         height: Dimensions.pageViewContainer,
                         margin: EdgeInsets.only(
@@ -458,12 +643,12 @@ class ClassWidget extends StatelessWidget {
                                   IconAndTextWidget(
                                     icon: Icons.location_on,
                                     text: classes[position].distance,
-                                    iconColor: Colors.black,
+                                    iconColor: AppColors.mainColor,
                                   ),
                                   IconAndTextWidget(
                                     icon: Icons.access_time_rounded,
                                     text: "60분",
-                                    iconColor: Colors.black,
+                                    iconColor: AppColors.iconColor2,
                                   ),
                                 ],
                               ),

@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.7.1
+  dots_indicator: ^2.1.0
   firebase_auth: ^4.6.1
   firebase_core: ^2.13.0
   firebase_messaging: ^14.6.1
@@ -28,6 +29,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/PretendardVariable.ttf
 
   assets:
     - assets/images/

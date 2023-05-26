@@ -22,12 +22,12 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
 
   List<Widget> _buildScreens() => [
         const Home(),
-        // const CartScreen(),
-        // const OrderScreen(),
-        // const AccountScreen(),
-        Container(),
-        Container(),
-        Container(),
+        const CartScreen(),
+        const OrderScreen(),
+        const AccountScreen(),
+        // Container(),
+        // Container(),
+        // Container(),
       ];
 
   List<PersistentBottomNavBarItem> _navBarsItems() => [

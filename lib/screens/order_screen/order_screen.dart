@@ -12,7 +12,7 @@ class OrderScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
-          "Your Orders",
+          "나의 예약들",
           style: TextStyle(
             color: Colors.black,
           ),
