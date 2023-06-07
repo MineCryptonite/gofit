@@ -66,8 +66,9 @@ class _CategoryViewState extends State<CategoryView> {
                         Text(
                           widget.categoryModel.category,
                           style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0,
+                            //fontWeight: FontWeight.bold,
+                            fontFamily: 'Pretendard',
                           ),
                         ),
                       ],
@@ -144,31 +145,32 @@ class _CategoryViewState extends State<CategoryView> {
                                                 SizedBox(
                                                     height:
                                                         Dimensions.height10),
-                                                SmallText(text: "TESTING"),
+                                                SmallText(
+                                                    text:
+                                                        productModelList[index]!
+                                                            .description),
                                                 SizedBox(
                                                     height:
                                                         Dimensions.height10),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
-                                                          .spaceBetween,
+                                                          .spaceEvenly,
                                                   children: [
                                                     IconAndTextWidget(
-                                                      icon: Icons.circle_sharp,
-                                                      text: "Normal",
-                                                      iconColor:
-                                                          AppColors.iconColor1,
-                                                    ),
-                                                    IconAndTextWidget(
                                                       icon: Icons.location_on,
-                                                      text: "1.7km",
+                                                      text: productModelList[
+                                                              index]!
+                                                          .distance,
                                                       iconColor:
                                                           AppColors.mainColor,
                                                     ),
                                                     IconAndTextWidget(
                                                       icon: Icons
                                                           .access_time_rounded,
-                                                      text: "32min",
+                                                      text: productModelList[
+                                                              index]!
+                                                          .duration,
                                                       iconColor:
                                                           AppColors.iconColor2,
                                                     ),

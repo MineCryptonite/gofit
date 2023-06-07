@@ -36,7 +36,23 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TopTitles(subtitle: "환영합니다.", title: "회원가입"),
+              const SizedBox(
+                height: kToolbarHeight + 12,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.arrow_back_ios)),
+              Center(
+                child: Text(
+                  "회원가입",
+                  style: const TextStyle(
+                    fontSize: 36.0,
+                    fontFamily: 'Pretendard',
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 46.0,
               ),
@@ -46,6 +62,9 @@ class _SignUpState extends State<SignUp> {
                   hintText: "이름",
                   prefixIcon: Icon(
                     Icons.person_outline,
+                  ),
+                  hintStyle: TextStyle(
+                    fontFamily: 'Pretendard',
                   ),
                 ),
               ),
@@ -57,6 +76,9 @@ class _SignUpState extends State<SignUp> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   hintText: "이메일",
+                  hintStyle: TextStyle(
+                    fontFamily: 'Pretendard',
+                  ),
                   prefixIcon: Icon(
                     Icons.email_outlined,
                   ),
@@ -70,6 +92,9 @@ class _SignUpState extends State<SignUp> {
                 keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
                   hintText: "전화번호",
+                  hintStyle: TextStyle(
+                    fontFamily: 'Pretendard',
+                  ),
                   prefixIcon: Icon(
                     Icons.phone_outlined,
                   ),
@@ -83,6 +108,9 @@ class _SignUpState extends State<SignUp> {
                 obscureText: isShowPassword,
                 decoration: InputDecoration(
                   hintText: "비밀번호",
+                  hintStyle: TextStyle(
+                    fontFamily: 'Pretendard',
+                  ),
                   prefixIcon: const Icon(
                     Icons.password_sharp,
                   ),
@@ -125,24 +153,31 @@ class _SignUpState extends State<SignUp> {
                 },
               ),
               const SizedBox(
-                height: 24.0,
+                height: 12.0,
               ),
-              const Center(
-                  child: Text(
-                "계정이 있으신가요?",
-                style: TextStyle(fontSize: 18),
-              )),
-              Center(
-                child: CupertinoButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "로그인",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(
+                      child: Text(
+                    "계정이 있으신가요?",
+                    style: TextStyle(fontSize: 14, fontFamily: 'Pretendard'),
+                  )),
+                  Center(
+                    child: CupertinoButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "로그인",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 14,
+                            fontFamily: 'Pretendard'),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),

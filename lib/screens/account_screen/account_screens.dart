@@ -30,9 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
         backgroundColor: Colors.white,
         title: const Text(
           "계정",
-          style: TextStyle(
-            color: Colors.black,
-          ),
+          style: TextStyle(color: Colors.black, fontFamily: 'Pretendard'),
         ),
       ),
       body: Column(
@@ -50,16 +48,18 @@ class _AccountScreenState extends State<AccountScreen> {
                             appProvider.getUserInformation.photo_url!),
                         radius: 60,
                       ),
+                const SizedBox(
+                  height: 12.0,
+                ),
                 Text(
                   appProvider.getUserInformation.display_name,
                   style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Pretendard'),
                 ),
-                Text(
-                  appProvider.getUserInformation.email,
-                ),
+                Text(appProvider.getUserInformation.email,
+                    style: TextStyle(fontFamily: 'Pretendard')),
                 const SizedBox(
                   height: 12.0,
                 ),
@@ -80,21 +80,22 @@ class _AccountScreenState extends State<AccountScreen> {
             flex: 2,
             child: Column(
               children: [
-                ListTile(
-                  onTap: () {
-                    Routes.instance
-                        .push(widget: const OrderScreen(), context: context);
-                  },
-                  leading: const Icon(Icons.shopping_bag_outlined),
-                  title: const Text("나의 예약들"),
-                ),
+                // ListTile(
+                //   onTap: () {
+                //     ㅈ
+                //   },
+                //   leading: const Icon(Icons.shopping_bag_outlined),
+                //   title: const Text("나의 예약들",
+                //       style: TextStyle(fontFamily: 'Pretendard')),
+                // ),
                 ListTile(
                   onTap: () {
                     Routes.instance.push(
                         widget: const FavouriteScreen(), context: context);
                   },
                   leading: const Icon(Icons.favorite_outline),
-                  title: const Text("찜"),
+                  title: const Text("찜",
+                      style: TextStyle(fontFamily: 'Pretendard')),
                 ),
                 /*ListTile(
                   onTap: () {
@@ -104,14 +105,15 @@ class _AccountScreenState extends State<AccountScreen> {
                   leading: const Icon(Icons.info_outline),
                   title: const Text("About us"),
                 ),*/
-                ListTile(
-                  onTap: () {
-                    Routes.instance
-                        .push(widget: const ChangePassword(), context: context);
-                  },
-                  leading: const Icon(Icons.change_circle_outlined),
-                  title: const Text("비밀번호 초기화"),
-                ),
+                // ListTile(
+                //   onTap: () {
+                //     Routes.instance
+                //         .push(widget: const ChangePassword(), context: context);
+                //   },
+                //   leading: const Icon(Icons.change_circle_outlined),
+                //   title: const Text("비밀번호 초기화",
+                //       style: TextStyle(fontFamily: 'Pretendard')),
+                // ),
                 ListTile(
                   onTap: () {
                     FirebaseAuthHelper.instance.signOut();
@@ -119,12 +121,14 @@ class _AccountScreenState extends State<AccountScreen> {
                     setState(() {});
                   },
                   leading: const Icon(Icons.exit_to_app),
-                  title: const Text("로그아웃"),
+                  title: const Text("로그아웃",
+                      style: TextStyle(fontFamily: 'Pretendard')),
                 ),
                 const SizedBox(
                   height: 12.0,
                 ),
-                const Text("Version 1.0.0")
+                // const Text("Version 1.0.0",
+                //     style: TextStyle(fontFamily: 'Pretendard')),
               ],
             ),
           ),

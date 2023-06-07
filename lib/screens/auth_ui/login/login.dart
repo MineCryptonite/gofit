@@ -31,7 +31,23 @@ class _LoginState extends State<Login> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TopTitles(subtitle: "시작하세요.", title: "로그인"),
+              const SizedBox(
+                height: kToolbarHeight + 12,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.arrow_back_ios)),
+              Center(
+                child: Text(
+                  "로그인",
+                  style: const TextStyle(
+                    fontSize: 36.0,
+                    fontFamily: 'Pretendard',
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 46.0,
               ),
@@ -41,6 +57,9 @@ class _LoginState extends State<Login> {
                   hintText: "이메일",
                   prefixIcon: Icon(
                     Icons.email_outlined,
+                  ),
+                  hintStyle: TextStyle(
+                    fontFamily: 'Pretendard',
                   ),
                 ),
               ),
@@ -52,22 +71,24 @@ class _LoginState extends State<Login> {
                 obscureText: isShowPassword,
                 decoration: InputDecoration(
                   hintText: "비밀번호",
+                  hintStyle: TextStyle(
+                    fontFamily: 'Pretendard',
+                  ),
                   prefixIcon: const Icon(
                     Icons.password_sharp,
                   ),
                   suffixIcon: CupertinoButton(
-                      onPressed: () {
-                        setState(() {
-                          isShowPassword = !isShowPassword;
-                        });
-                      },
-                      padding: EdgeInsets.zero,
-                      child: Icon(
-                        isShowPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.grey,
-                      )),
+                    onPressed: () {
+                      setState(() {
+                        isShowPassword = !isShowPassword;
+                      });
+                    },
+                    padding: EdgeInsets.zero,
+                    child: Icon(
+                      isShowPassword ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -88,25 +109,32 @@ class _LoginState extends State<Login> {
                 },
               ),
               const SizedBox(
-                height: 18.0,
+                height: 12.0,
               ),
-              const Center(
-                  child: Text(
-                "계정이 없으신가요?",
-                style: TextStyle(fontSize: 18),
-              )),
-              Center(
-                child: CupertinoButton(
-                  onPressed: () {
-                    Routes.instance
-                        .push(widget: const SignUp(), context: context);
-                  },
-                  child: Text(
-                    "회원가입",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(
+                      child: Text(
+                    "계정이 없으신가요?",
+                    style: TextStyle(fontSize: 14, fontFamily: 'Pretendard'),
+                  )),
+                  Center(
+                    child: CupertinoButton(
+                      onPressed: () {
+                        Routes.instance
+                            .push(widget: const SignUp(), context: context);
+                      },
+                      child: Text(
+                        "회원가입",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 14,
+                            fontFamily: 'Pretendard'),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),

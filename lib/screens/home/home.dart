@@ -83,13 +83,40 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey, // Set the color of the border
+            width: 1.0, // Set the width of the border
+          ),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              // Handle notification icon pressed
+            },
+            behavior: HitTestBehavior
+                .translucent, // Make the GestureDetector respond to all events within its bounds
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Icon(
+                Icons.notifications_outlined,
+                color: Colors.black, // Set the color of the icon to white
+              ),
+            ),
+          ),
+        ],
+      ),
       body: isLoading
           ? Center(
               child: Container(
                 height: 100,
                 width: 100,
                 alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
+                child: const CircularProgressIndicator(
+                  color: Colors.black,
+                ),
               ),
             )
           : SingleChildScrollView(
@@ -101,26 +128,16 @@ class _HomeState extends State<Home> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: 64.0,
-                        ),
+                        // const SizedBox(
+                        //   height: 64.0,
+                        // ),
                         BigText(
                           text: "검색",
                           size: 24,
                         ),
-                        // const TopTitles(subtitle: "", title: "GoFit"),
-                        // Text(
-                        //   'GoFit',
-                        //   style: TextStyle(
-                        //     fontFamily: 'Pretendard',
-                        //     fontSize: 50,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
                         const SizedBox(
-                          height: 14.0,
+                          height: 24.0,
                         ),
-
                         TextFormField(
                           controller: search,
                           onChanged: (String value) {
@@ -133,10 +150,14 @@ class _HomeState extends State<Home> {
                         ),
                         BigText(
                           text: "종류별",
+                          size: 24,
                         ),
                       ],
                     ),
                   ),
+                  // const SizedBox(
+                  //   height: 24.0,
+                  // ),
                   categoriesList.isEmpty
                       ? const Center(
                           child: Text("Categories is empty"),
@@ -147,7 +168,10 @@ class _HomeState extends State<Home> {
                             children: categoriesList
                                 .map(
                                   (e) => Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
+                                    padding: const EdgeInsets.only(
+                                      left: 8.0,
+                                      top: 12.0,
+                                    ),
                                     child: CupertinoButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
@@ -158,7 +182,7 @@ class _HomeState extends State<Home> {
                                       },
                                       child: Card(
                                           color: Colors.white,
-                                          elevation: 3.0,
+                                          //elevation: 3.0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(20.0),
@@ -190,16 +214,17 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                   const SizedBox(
-                    height: 36.0,
+                    height: 12.0,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 12.0, left: 12.0),
                     child: BigText(
                       text: "인기",
+                      size: 24,
                     ),
                   ),
                   const SizedBox(
-                    height: 12.0,
+                    height: 24.0,
                   ),
                   homeClassesList.isNotEmpty
                       ? ClassWidget(
@@ -227,20 +252,22 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    height: 24.0,
+                  ),
                   !isSearched()
                       ? Padding(
                           padding: EdgeInsets.only(top: 12.0, left: 12.0),
                           child: BigText(
                             text: "전체",
+                            size: 24,
                           ),
                         )
                       : SizedBox.fromSize(),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
+
                   search.text.isNotEmpty && searchList.isEmpty
                       ? const Center(
-                          child: Text("No Product Found"),
+                          child: Text("검색한 수업이 없습니다"),
                         )
                       : searchList.isNotEmpty
                           ? Container(
@@ -488,9 +515,9 @@ class _HomeState extends State<Home> {
                                     }),
                                   ),
                                 ),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
+                  // const SizedBox(
+                  //   height: 12.0,
+                  // ),
                 ],
               ),
             ),
@@ -634,8 +661,9 @@ class ClassWidget extends StatelessWidget {
                               BigText(
                                   text: classes[position].name,
                                   size: Dimensions.font26),
-                              //SizedBox(height: Dimensions.height10),
-                              SizedBox(height: Dimensions.height20),
+                              SizedBox(height: Dimensions.height10 / 2),
+                              SmallText(text: classes[position].description),
+                              SizedBox(height: Dimensions.height10),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -647,7 +675,7 @@ class ClassWidget extends StatelessWidget {
                                   ),
                                   IconAndTextWidget(
                                     icon: Icons.access_time_rounded,
-                                    text: "60분",
+                                    text: classes[position].duration,
                                     iconColor: AppColors.iconColor2,
                                   ),
                                 ],

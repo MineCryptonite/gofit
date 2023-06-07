@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gofit/screens/account_screen/account_screens.dart';
 import 'package:gofit/screens/cart_screen/cart_screen.dart';
 import 'package:gofit/screens/home/home.dart';
+import 'package:gofit/screens/map_screen.dart';
+import 'package:gofit/screens/membership_screen.dart';
 import 'package:gofit/screens/order_screen/order_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -22,9 +24,11 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
 
   List<Widget> _buildScreens() => [
         const Home(),
-        const CartScreen(),
+        const MapScreen(),
+        const MembershipScreen(),
         const OrderScreen(),
         const AccountScreen(),
+
         // Container(),
         // Container(),
         // Container(),
@@ -35,29 +39,36 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           icon: const Icon(Icons.home),
           inactiveIcon: const Icon(Icons.home_outlined),
           title: "Home",
-          activeColorPrimary: Colors.white,
-          inactiveColorPrimary: Colors.white,
+          activeColorPrimary: Colors.black,
+          inactiveColorPrimary: Colors.black,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.shopping_cart),
-          inactiveIcon: const Icon(Icons.shopping_cart_outlined),
-          title: "Cart",
-          activeColorPrimary: Colors.white,
-          inactiveColorPrimary: Colors.white,
+          icon: const Icon(Icons.map),
+          inactiveIcon: const Icon(Icons.map_outlined),
+          title: "Map",
+          activeColorPrimary: Colors.black,
+          inactiveColorPrimary: Colors.black,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.circle_rounded),
-          inactiveIcon: const Icon(Icons.circle_outlined),
+          icon: const Icon(Icons.wallet_membership),
+          inactiveIcon: const Icon(Icons.wallet_membership_outlined),
+          title: "Membership",
+          activeColorPrimary: Colors.black,
+          inactiveColorPrimary: Colors.black,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.calendar_month),
+          inactiveIcon: const Icon(Icons.calendar_month_outlined),
           title: "Orders",
-          activeColorPrimary: Colors.white,
-          inactiveColorPrimary: Colors.white,
+          activeColorPrimary: Colors.black,
+          inactiveColorPrimary: Colors.black,
         ),
         PersistentBottomNavBarItem(
           icon: const Icon(Icons.person),
           inactiveIcon: const Icon(Icons.person_outline),
           title: "Account",
-          activeColorPrimary: Colors.white,
-          inactiveColorPrimary: Colors.white,
+          activeColorPrimary: Colors.black,
+          inactiveColorPrimary: Colors.black,
         ),
       ];
 
@@ -74,7 +85,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
               : kBottomNavigationBarHeight,
           bottomScreenMargin: 0,
 
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           hideNavigationBar: _hideNavBar,
           decoration: const NavBarDecoration(colorBehindNavBar: Colors.indigo),
           itemAnimationProperties: const ItemAnimationProperties(

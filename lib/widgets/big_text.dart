@@ -24,7 +24,7 @@ class BigText extends StatelessWidget {
         fontFamily: 'Pretendard',
         color: color,
         fontSize: size == 0 ? Dimensions.font20 : size,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
       ),
     );
   }

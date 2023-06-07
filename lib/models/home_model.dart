@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-HomeModel categoryModelFromJson(String str) =>
-    HomeModel.fromJson(json.decode(str));
+HomeModel homeModelFromJson(String str) => HomeModel.fromJson(json.decode(str));
 
-String categoryModelToJson(HomeModel data) => json.encode(data.toJson());
+String homeModelToJson(HomeModel data) => json.encode(data.toJson());
 
 class HomeModel {
   HomeModel({

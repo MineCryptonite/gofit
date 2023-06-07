@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gofit/constants/constants.dart';
 import 'package:gofit/models/category_model/category_model.dart';
+import 'package:gofit/models/class_available_time_slots_model.dart';
 import 'package:gofit/models/class_details_model.dart';
 import 'package:gofit/models/home_model.dart';
 import 'package:gofit/models/order_model/order_model.dart';
@@ -144,6 +145,30 @@ class FirebaseFirestoreHelper {
     return UserModel.fromJson(querySnapshot.data()!);
   }
 
+  Future<List<ClassAvailableTimeSlotsModel>> getClassAvailableTimeSlotsModels(
+      ProductModel product) async {
+    List<Future<DocumentSnapshot>> fetchFutures = [];
+
+    for (DocumentReference timeSlotRef in product.classAvailableTimeSlotsRefs) {
+      fetchFutures.add(timeSlotRef.get());
+    }
+
+    List<DocumentSnapshot> timeSlotSnapshots = await Future.wait(fetchFutures);
+
+    List<ClassAvailableTimeSlotsModel> timeSlotsModels =
+        timeSlotSnapshots.map((timeSlotSnapshot) {
+      Map<String, dynamic>? data =
+          timeSlotSnapshot.data() as Map<String, dynamic>?;
+      if (data != null) {
+        return ClassAvailableTimeSlotsModel.fromJson(data);
+      } else {
+        throw Exception("Invalid document data");
+      }
+    }).toList();
+
+    return timeSlotsModels;
+  }
+
   /*Future<ClassDetailsModel?> getClassDetailsFromClasses(
       ProductModel classModel) async {
     try {
@@ -223,6 +248,68 @@ class FirebaseFirestoreHelper {
       }
     } catch (e) {
       print('Error updating class documents with classDetails: $e');
+    }
+  }
+
+  Future<void> copyTimeslotReferencesToClasses() async {
+    // Get the documents from the "classAvailableTimeslots" collection
+    QuerySnapshot timeslotsSnapshot = await FirebaseFirestore.instance
+        .collection('classAvailableTimeSlots')
+        .get();
+
+    // Iterate through each timeslot document
+    for (DocumentSnapshot timeslotDoc in timeslotsSnapshot.docs) {
+      // Get the classRef field value from the timeslot document
+      DocumentReference classRef = timeslotDoc.get('classRef');
+      print("TEST");
+
+      // Create a reference to the timeslot document
+      DocumentReference timeslotRef = FirebaseFirestore.instance
+          .collection('classAvailableTimeSlots')
+          .doc(timeslotDoc.id);
+
+      // Update the class document with the timeslot reference
+      DocumentSnapshot classSnapshot = await classRef.get();
+
+      if (classSnapshot.exists) {
+        List<dynamic> timeslotRefs = [];
+        Map<String, dynamic> data =
+            classSnapshot.data() as Map<String, dynamic>;
+
+        if (data.containsKey('classAvailableTimeSlotsRefs')) {
+          print("TRUE");
+          timeslotRefs =
+              List<dynamic>.from(data['classAvailableTimeSlotsRefs']);
+          timeslotRefs.add(timeslotRef);
+        } else {
+          // The 'classAvailableTimeSlotsRefs' field does not exist
+          // Handle the case accordingly, e.g., initialize an empty list
+          timeslotRefs.add(timeslotRef);
+        }
+        await classRef.update({'classAvailableTimeSlotsRefs': timeslotRefs});
+
+        // Rest of your code...
+      } else {
+        // Handle the case where the class document doesn't exist
+      }
+
+      // if (classSnapshot.exists) {
+      //   List<dynamic> timeslotRefs =
+      //       classSnapshot.get('classAvailableTimeSlotsRefs');
+
+      //   if (timeslotRefs == null) {
+      //     // Create a new array with the timeslot reference if the array doesn't exist
+      //     timeslotRefs = [timeslotRef];
+      //   } else {
+      //     // Add the timeslot reference to the existing array if it exists
+      //     timeslotRefs.add(timeslotRef);
+      //   }
+
+      //   // Update the class document with the updated timeslotRefs array
+      //   await classRef.update({'classAvailableTimeSlotsRefs': timeslotRefs});
+      // } else {
+      //   // Handle the case where the class document doesn't exist
+      // }
     }
   }
 

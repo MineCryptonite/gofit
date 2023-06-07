@@ -21,20 +21,26 @@ class TopTitles extends StatelessWidget {
         const SizedBox(
           height: 12.0,
         ),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+        Center(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 36.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Pretendard',
+            ),
           ),
         ),
         const SizedBox(
           height: 12,
         ),
-        Text(
-          subtitle,
-          style: const TextStyle(
-            fontSize: 18.0,
+        Center(
+          child: Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontFamily: 'Pretendard',
+            ),
           ),
         ),
       ],

@@ -6,21 +6,21 @@ class SmallText extends StatelessWidget {
   final String text;
   double size;
   double height;
+  int maxLines;
   SmallText({
     Key? key,
-    //this.color = const Color(0xFFccc7c5),
-    this.color = ,
-
+    this.color = const Color(0xFFccc7c5),
     required this.text,
     this.size = 12,
     this.height = 1.2,
+    this.maxLines = 2,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      maxLines: 2,
+      maxLines: maxLines,
       style: TextStyle(
         fontFamily: 'Pretendard',
         color: color,

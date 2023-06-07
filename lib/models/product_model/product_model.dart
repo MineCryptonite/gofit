@@ -33,6 +33,7 @@ class ProductModel {
     required this.monthlyLimit,
     required this.requirements,
     required this.website,
+    required this.classAvailableTimeSlotsRefs,
   });
   String address;
   List<dynamic> businessHours;
@@ -58,6 +59,7 @@ class ProductModel {
   int priority;
   int ratings;
   bool isFavourite;
+  List<dynamic> classAvailableTimeSlotsRefs;
 
   //int? qty;
 
@@ -86,6 +88,7 @@ class ProductModel {
         monthlyLimit: json["monthlyLimit"] ?? 0,
         requirements: json["requirements"] ?? "",
         website: json["website"] ?? "",
+        classAvailableTimeSlotsRefs: json["classAvailableTimeSlotsRefs"] ?? [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -112,6 +115,7 @@ class ProductModel {
         "monthlyLimit": monthlyLimit,
         "requirements": requirements,
         "website": website,
+        "classAvailableTimeSlotsRefs": classAvailableTimeSlotsRefs,
       };
   // ProductModel copyWith({
   //   int? qty,

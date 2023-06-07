@@ -77,7 +77,7 @@ class AppProvider with ChangeNotifier {
       Navigator.of(context, rootNavigator: true).pop();
       Navigator.of(context).pop();
     }
-    showMessage("Successfully updated profile");
+    showMessage("수정이 되었습니다.");
 
     notifyListeners();
   }

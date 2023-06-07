@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-ClassDetailsModel productModelFromJson(String str) =>
+ClassDetailsModel classDetailsModelFromJson(String str) =>
     ClassDetailsModel.fromJson(json.decode(str));
 
-String productModelToJson(ClassDetailsModel data) => json.encode(data.toJson());
+String classDetailsModelToJson(ClassDetailsModel data) =>
+    json.encode(data.toJson());
 
 class ClassDetailsModel {
   ClassDetailsModel({

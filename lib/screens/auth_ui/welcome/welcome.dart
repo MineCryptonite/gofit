@@ -23,21 +23,29 @@ class Welcome extends StatelessWidget {
             SizedBox(height: 100),
             Text(
               "안녕하세요!",
-              style: TextStyle(color: Colors.black, fontSize: 50),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 50,
+                fontFamily: 'Pretendard',
+              ),
             ),
             SizedBox(height: 20),
             Text(
               "고핏에 온걸 환영합니다.",
-              style: TextStyle(color: Colors.black, fontSize: 20),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontFamily: 'Pretendard',
+              ),
             ),
-            SizedBox(height: 480),
-            const SizedBox(
-              height: 30.0,
+            Expanded(
+              child: SizedBox(),
             ),
             Center(
               child: Text(
                 "시작하세요.",
                 style: TextStyle(
+                  fontFamily: 'Pretendard',
                   color: Colors.black,
                   fontSize: 20,
                 ),
